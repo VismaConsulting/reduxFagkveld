@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import notaterReducer from "./notaterReducer";
+import konsulenterReducer from "./konsulenterReducer";
 
 const reducers = combineReducers({
-  notater: notaterReducer,
+  konsulenter: konsulenterReducer,
 });
 
 export default reducers;

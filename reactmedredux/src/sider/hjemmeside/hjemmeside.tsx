@@ -1,65 +1,59 @@
-import axios from "axios";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
-import { notatActionCreators } from "../../redux";
+import { konsulentActionCreators } from "../../redux";
 import { RootState } from "../../redux/reducers";
 
-export interface IVareProps {
+export interface IKonsulent {
   id: string;
-  beskrivelse: string;
-  pris: number;
+  navn: string;
+  alder: number;
+  epost: string;
 }
 
 const Hjemmeside: React.FC = () => {
-  const [beksrivelse, settBeskrivelse] = React.useState<string>("");
-  const [pris, settPris] = React.useState<number | null>(null);
+  const [navn, settNavn] = React.useState<string>("");
+  const [alder, settAlder] = React.useState<number>(0);
+  const [epost, settEpost] = React.useState<string>("");
 
-  const { varer, loading, error } = useSelector(
-    (state: RootState) => state.notater
+  const { konsulenter, loading, error } = useSelector(
+    (state: RootState) => state.konsulenter
   );
-  console.log(varer);
+  console.log(konsulenter);
 
   const dispatch = useDispatch();
-  const { hentVarer, leggTilVare, slettVare } = bindActionCreators(
-    notatActionCreators,
-    dispatch
-  );
-
-  React.useEffect(() => {
-    hentVarer();
-  }, []);
-
-  const leggTilPost = async (text: string) => {
-    leggTilVare({});
-  };
-
-  const slettPost = async (id: string) => {
-    slettVare(id);
-  };
+  const { hentKonsulenter, leggTilKonsulent, slettKonsulent } =
+    bindActionCreators(konsulentActionCreators, dispatch);
 
   return (
     <div>
       <h1>Redux demo</h1>
 
       <input
-        type="text"
-        placeholder="Tekst for  post"
-        onChange={(e) => settBeskrivelse(e.target.value)}
+        type="navn"
+        placeholder="Konsulent navn"
+        onChange={(e) => settNavn(e.target.value)}
       />
       <input
         type="number"
-        placeholder="pris"
-        onChange={(e) => settPris(e.target.value)}
+        placeholder="alder"
+        onChange={(e) => settAlder(parseInt(e.target.value))}
+      />
+      <input
+        type="epost"
+        placeholder="epost"
+        onChange={(e) => settEpost(e.target.value)}
       />
 
-      <button onClick={() => leggTilPost(postText)}>Legg til post</button>
+      <button onClick={() => leggTilKonsulent({ navn, alder, epost })}>
+        Legg til konsulent
+      </button>
 
-      {notater.map((post: INotat) => (
-        <div key={post.id}>
-          <b>post: {post.id}</b>
-          <span>{JSON.stringify(post)}</span>
-          <button onClick={() => slettPost(post.id)}>delete</button>
+      {konsulenter.map((konsulent: IKonsulent) => (
+        <div key={konsulent.id}>
+          <b>post: {konsulent.id}</b>
+          <span>{JSON.stringify(konsulent)}</span>
+          <button onClick={() => slettKonsulent(konsulent.id)}>delete</button>
         </div>
       ))}
     </div>
