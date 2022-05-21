@@ -35,7 +35,9 @@ export const getTodos = () => async (dispatch: Dispatch<ITodoActionType>) => {
       dispatch(getTodosAction(response.data));
     })
     .catch((error: AxiosError) => {
-      dispatch(requestFailedAction(error.message));
+      dispatch(
+        requestFailedAction(error.response?.data.message || error.message)
+      );
     });
 };
 
@@ -55,7 +57,9 @@ export const addTodo =
         dispatch(addTodoAction(response.data));
       })
       .catch((error: AxiosError) => {
-        dispatch(requestFailedAction(error.message));
+        dispatch(
+          requestFailedAction(error.response?.data.message || error.message)
+        );
       });
   };
 
@@ -68,7 +72,9 @@ export const deleteTodo =
         dispatch(deleteTodoAction(response.data));
       })
       .catch((error: AxiosError) => {
-        dispatch(requestFailedAction(error.message));
+        dispatch(
+          requestFailedAction(error.response?.data.message || error.message)
+        );
       });
   };
 
@@ -86,6 +92,8 @@ export const modifyTodoDoneStatus =
         dispatch(modifyTodoDoneStatusAction(response.data));
       })
       .catch((error: AxiosError) => {
-        dispatch(requestFailedAction(error.message));
+        dispatch(
+          requestFailedAction(error.response?.data.message || error.message)
+        );
       });
   };

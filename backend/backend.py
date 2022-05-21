@@ -53,12 +53,14 @@ def modify_todo_done(id, new_done):
     db.session.commit()
     return todo.as_dict()
 
-@app.route("/api/todos", methods=["POST", "GET", "DELETE", "PATCH"])
+@app.route("/api/todos", methods=["POST", "GET", "PATCH"])
 def todos():
     try:   
         if (request.method == "POST"):
             print(request.json)
             text = request.json["text"]
+            if(not text):
+                raise Exception("Gjøremåltekst kan ikke være tom")
             lagt_til_todo = lag_todo(text)
             return jsonify(lagt_til_todo)
         
@@ -66,10 +68,9 @@ def todos():
             alle_todoer = hent_alle_todoer()
             return jsonify(alle_todoer)
             
-    
-
     except Exception as e:
-        return repr(e), 500
+        return jsonify(message=str(e)), 500
+
 
 @app.route("/api/todos/<id>", methods=["PATCH", "DELETE"])
 def todo(id):
@@ -85,7 +86,7 @@ def todo(id):
             return jsonify(modified_todo)
 
     except Exception as e:
-        return repr(e), 500
+        return jsonify(message=str(e)), 500
 
 
 
