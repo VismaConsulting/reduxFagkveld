@@ -14,110 +14,78 @@ db = SQLAlchemy(app)
 db.create_all()
 
 
-
-    
-
-
-class Handlekurv(db.Model):
-    __tablename__ = "handlekurv"
+class Todo(db.Model):
+    __tablename__ = "todo"
     id = db.Column(db.Integer, primary_key=True)
-    varer_i_handlekurv = db.relationship("Vare", backref="handlekurv")
-    
-    def as_dict(self):
-        return [v.as_dict() for v in varer_i_handlekurv]    
-
-class Vare(db.Model):
-    __tablename__ = "vare"
-    id = db.Column(db.Integer, primary_key=True)
-    beskrivelse = db.Column(db.String(2048))
-    pris = db.Column(db.Integer)
-
+    text = db.Column(db.String(2048))
+    done = db.Column(db.Boolean)
     def as_dict(self):
         return {
             "id": self.id,
-            "text": self.text
+            "text": self.text,
+            "done": self.done,
         }
 
-    def __init__(self, beskrivelse, pris):
+    def __init__(self, text):
         self.text = text
-        self.pris = pris
+        self.done = False
    
 
-def legg_til_vare(beskrivelse, pris):
-    ny_vare = Vare(beskrivelse, pris)
-    db.session.add(ny_vare)
+def lag_todo(text):
+    ny_todo = Todo(text)
+    db.session.add(ny_todo)
     db.session.commit()
-    return ny_vare.as_dict()
+    return ny_todo.as_dict()
 
-def hent_alle_varer():
-    alle_varer = Vare.query.all()
-    return [v.as_dict() for p in alle_varer]
+def hent_alle_todoer():
+    alle_todoer = Todo.query.all()
+    return [todo.as_dict() for todo in alle_todoer]
 
     
-def slett_vare(id):
-    vare_som_skal_slettes = Vare.query.get(id)
-    db.session.delete(vare_som_skal_slettes)
+def slett_todo(id):
+    todo_som_skal_slettes = Todo.query.get(id)
+    db.session.delete(todo_som_skal_slettes)
     db.session.commit()
 
+def modify_todo_done(id, new_done): 
+    todo = Todo.query.get(id)
+    todo.done = new_done
+    db.session.commit()
+    return todo.as_dict()
 
-
-
-@app.route("/api/varer", methods=["POST", "GET", "DELETE"])
-def varer():
+@app.route("/api/todos", methods=["POST", "GET", "DELETE", "PATCH"])
+def todos():
     try:   
         if (request.method == "POST"):
-            beskrivelse = request.json["text"]
-            pris = request.json["beskrivelse"]
-            lagt_til_vare = legg_til_vare(text)
-            return jsonify(lagt_til_vare)
+            print(request.json)
+            text = request.json["text"]
+            lagt_til_todo = lag_todo(text)
+            return jsonify(lagt_til_todo)
         
         if (request.method == "GET"):
-            alle_varer = hent_alle_varer()
-            return jsonify(alle_varer)
+            alle_todoer = hent_alle_todoer()
+            return jsonify(alle_todoer)
             
-        if (request.method == "DELETE"):
-            id = request.json["id"]
-            slett_vare(id)
-            return id
+    
 
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return repr(e), 500
 
-
-@app.route("/api/handlekurv/varer", methods=["POST", "GET", "DELETE"])
-def handlekurv():
+@app.route("/api/todos/<id>", methods=["PATCH", "DELETE"])
+def todo(id):
     try:   
-        if (request.method == "POST"):
-            beskrivelse = request.json["text"]
-            pris = request.json["beskrivelse"]
-            lagt_til_vare = legg_til_vare(text)
-            return jsonify(lagt_til_vare)
-        
-        if (request.method == "GET"):
-            handlekurv = Handlekurv()
-            db.session.add(handlekurv)
-            db.session.commit()
-            return jsonify(handlekurv.as_dict())
-            
         if (request.method == "DELETE"):
-            id = request.json["id"]
-            slett_vare(id)
-            return id
+            slett_todo(id)
+            return jsonify(int(id))
+            
+        if (request.method == "PATCH"):
+            print(request.json)
+            new_done = request.json["done"]
+            modified_todo = modify_todo_done(id, new_done)
+            return jsonify(modified_todo)
 
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return repr(e), 500
 
 
 
-# # lag en halvekurv hvis ingen eksisterer
-# handlekurv = Handlekurv.query.all().first()
-# if (not handlekurv):
-#     handlekurs = Handlekurv()
-#     db.session.add(handlekurv)
-#     db.session.commit()
-
-# handlekurv2 = Handlekurv.query.all().first()
-
-# print(handlekurv2)
-
-# print("init asdsds")
