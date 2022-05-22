@@ -9,7 +9,7 @@
 
 ### sette opp database 
 `flask shell`  
-`from db import db`  
+`from backend import db`  
 `db.create_all()`  
 `quit()` 
 
