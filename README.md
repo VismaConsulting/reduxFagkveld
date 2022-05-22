@@ -1,7 +1,7 @@
 # reduxFagkveld
 
 
-backend:
+##backend:
 pip install venv
 
 python -m venv venv
@@ -13,6 +13,7 @@ pip install -r requirements.txt
 flask run
 
 
-frontend:
+##frontend:
 npm i
+
 npm start
