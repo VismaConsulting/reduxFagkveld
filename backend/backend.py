@@ -59,7 +59,7 @@ def modify_todo_done(id, new_done):
     db.session.commit()
     return todo.as_dict()
 
-@app.route("/api/todos", methods=["POST", "GET", "PATCH"])
+@app.route("/api/todos", methods=["POST", "GET"])
 def todos():
     try:   
         if (request.method == "POST"):
