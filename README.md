@@ -13,7 +13,7 @@
 `db.create_all()`  
 `quit()` 
 
-flask run
+`flask run)` 
 
 
 ## frontend:
