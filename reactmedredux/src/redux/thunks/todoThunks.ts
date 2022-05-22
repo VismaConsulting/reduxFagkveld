@@ -1,4 +1,4 @@
-import { modifyTodoDoneStatusAction } from "./../actions/todosActions";
+import { modifyTodoDoneStatusAction } from "../actions/todosActions";
 import axios, { AxiosError } from "axios";
 import { Dispatch } from "react";
 import { ITodo } from "../../komponenter/types";

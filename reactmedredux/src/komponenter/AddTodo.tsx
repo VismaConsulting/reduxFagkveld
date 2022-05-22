@@ -1,18 +1,16 @@
 import React from "react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import { todosActionCreator } from "../redux";
+import { addTodo } from "../redux";
 
 const AddTodo = () => {
   const [text, setText] = React.useState<string>("");
 
   const dispatch = useDispatch();
-  const { addTodo } = bindActionCreators(todosActionCreator, dispatch);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    addTodo({ text });
+    dispatch(addTodo({ text }));
     setText("");
   };
 

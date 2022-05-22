@@ -44,11 +44,17 @@ def hent_alle_todoer():
     
 def slett_todo(id):
     todo_som_skal_slettes = Todo.query.get(id)
+    if(not todo_som_skal_slettes):
+        raise Exception(f"Finner ikke todo med id {id}")
     db.session.delete(todo_som_skal_slettes)
     db.session.commit()
+    
 
 def modify_todo_done(id, new_done): 
     todo = Todo.query.get(id)
+    if(not todo):
+        raise Exception(f"Finner ikke todo med id {id}")
+
     todo.done = new_done
     db.session.commit()
     return todo.as_dict()

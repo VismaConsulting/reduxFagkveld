@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { Spinner, Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { bindActionCreators } from "redux";
-import { todosActionCreator } from "../redux";
+import { getTodos } from "../redux";
 import { RootState } from "../redux/reducers";
 import AddTodo from "./AddTodo";
 import TodoItem from "./TodoItem";
@@ -13,11 +12,10 @@ const TodosPage: React.FC = () => {
   );
 
   const dispatch = useDispatch();
-  const { getTodos } = bindActionCreators(todosActionCreator, dispatch);
 
   // On page load
   useEffect(() => {
-    getTodos();
+    dispatch(getTodos());
   }, []);
 
   return (
